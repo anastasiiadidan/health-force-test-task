@@ -39,7 +39,6 @@ def filter_minor_from_df(df_patients: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: The filtered DataFrame.
     """
-
     nb_patient_before = len(df_patients.index)
     df_patients["age"] = (pd.Timestamp("now") - df_patients["Data_Di_Nascita"]).astype(
         "<m8[Y]"
@@ -47,14 +46,12 @@ def filter_minor_from_df(df_patients: pd.DataFrame) -> pd.DataFrame:
     result = df_patients[df_patients["age"] >= 18]
     nb_patient_after = len(result.index)
     nb_minor = nb_patient_before - nb_patient_after
-
     if nb_minor > 0:
         logger.debug(
             f"{nb_minor} patients were minor and therefore dropped from the file"
         )
     else:
         logger.debug(f"No minor patient detected")
-
     return result
 
 
@@ -71,9 +68,7 @@ def filter_accepted_insurances(
     Returns:
         pd.DataFrame: The filtered DataFrame.
     """
-
     nb_patient_before = len(df_patients.index)
-
     # We could do with the column "BusinessPartner" that contains
     # an int that seems to be a indentifiant of the insurance
     result = df_patients.loc[
@@ -137,7 +132,6 @@ def add_check_2nd_pnr(
     Returns:
         pd.DataFrame: The DataFrame with the added column.
     """
-
     xls = pd.ExcelFile(path_file_second_pnr)
     df_2nd_pnr_osr = pd.read_excel(xls, "OSR")
     df_2nd_pnr_srt = pd.read_excel(xls, "SRT")
@@ -156,7 +150,7 @@ def add_check_2nd_pnr(
     ] = True
 
     second_pnr_count = df_patients["second_pnr"].value_counts()
-    nb_second_pnr = 0 if True not in second_pnr_count else second_pnr_count[True]
+    nb_second_pnr = second_pnr_count.get(True, 0)
     logger.debug(f"{nb_second_pnr} patients need a second pnr")
     return df_patients
 
@@ -185,14 +179,12 @@ def add_cat_code(df_patients: pd.DataFrame, path_cat_code: str) -> pd.DataFrame:
         how="left",
     )
     joined["type_prestazioni"] = joined["ID prestazioni"].map(DICT_PRESTAZIONNE)
-
     nb_patient_after = len(joined.index)
-
     if nb_patient_before != nb_patient_after:
         dropped_patients = nb_patient_before - nb_patient_after
         logger.error(
             f"{dropped_patients} patients were dropped because of their ESAME."
-            " This REALLY should not happen. DATA WAS LOST ! "
+            " This REALLY should not happen. DATA WAS LOST !"
         )
     return joined
 
@@ -207,7 +199,6 @@ def extract_scadenza_from_df(df_patients: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: The DataFrame with scadenza info.
     """
-
     nb_patient_before = len(df_patients.index)
 
     df_patients["scad"] = ""
@@ -246,7 +237,6 @@ def create_df_from_excel(
     Returns:
         None
     """
-
     # Open the file and get the correct header
     xls = pd.ExcelFile(path_file_excel_next_appointments)
     df_patients = pd.read_excel(xls, QUAS, header=None)

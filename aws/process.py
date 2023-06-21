@@ -39,7 +39,6 @@ def fetch_patient_data(webdriver: WebDriver, patient_pnr: str) -> str:
     string
         Patient data as text
     """
-
     return webdriver.get(PATIENT_DATA_URL.format(patient_pnr)).text
 
 

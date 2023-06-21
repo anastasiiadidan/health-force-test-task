@@ -187,10 +187,8 @@ def main():
     """
     # Load config file
     start_time = time.time()
-
     config = configparser.ConfigParser()
     config.read(Path(__file__).parent.parent / "config.ini")
-
     # Setup paths
     path_dir_data = config["path"]["path_dir_data"]
     if "{date}" in path_dir_data:
@@ -235,10 +233,8 @@ def main():
 
     # Stop the timer
     end_time = time.time()
-
     # Calculate the elapsed time
     elapsed_time = end_time - start_time
-
     # Print the execution time
     print(f"Elapsed time: {elapsed_time} seconds")
 
